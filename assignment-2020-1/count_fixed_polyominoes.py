@@ -53,10 +53,10 @@ def CountFixedPolyominoes(G, untried, n, p, c):
     return c[0]
 
 parser = argparse.ArgumentParser()
-parser.add_argument("size", type=int, help="display a number of free polyominoes with a specific size")
+parser.add_argument("n", type=int, help="the size of polyominoes")
 parser.add_argument("-p", help="print graph", action="store_true")
 args = parser.parse_args()
-n = args.size
+n = args.n
 graph = create_graph(n) 
 if args.p:
     pprint.pprint(graph)
