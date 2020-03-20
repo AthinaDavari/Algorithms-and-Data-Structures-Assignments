@@ -1,6 +1,10 @@
 import pprint
 import argparse
 
+class Counter:
+  def __init__(self):
+    self.counter = 0
+
 def create_graph(n):
     graph = {}
     for x in range(-(n - 2), n):
@@ -41,7 +45,7 @@ def CountFixedPolyominoes(G, untried, n, p, c):
         u = untried.pop()
         p.append(u)
         if len(p) == n:
-            c[0] = c[0] + 1
+            c.counter = c.counter + 1
         else:
             new_neighbors = set()
             for v in G[u]:
@@ -50,7 +54,7 @@ def CountFixedPolyominoes(G, untried, n, p, c):
             new_untried = untried.union(new_neighbors)
             CountFixedPolyominoes(G, new_untried, n, p, c)
         p.remove(u)
-    return c[0]
+    return c.counter
 
 parser = argparse.ArgumentParser()
 parser.add_argument("n", type=int, help="the size of polyominoes")
@@ -60,4 +64,4 @@ n = args.n
 graph = create_graph(n) 
 if args.p:
     pprint.pprint(graph)
-print(CountFixedPolyominoes(graph, {(0, 0)}, n, [], [0]))
+print(CountFixedPolyominoes(graph, {(0, 0)}, n, [], Counter()))
