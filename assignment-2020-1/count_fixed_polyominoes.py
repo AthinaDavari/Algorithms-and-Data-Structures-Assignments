@@ -34,9 +34,8 @@ def create_graph(n):
 
 def neighbors(G, p, v, u):
     for j in p:
-        if j != u:
-            if v in G[j]:
-                return False
+        if j != u and v in G[j]:
+            return False
     return True
 
 def CountFixedPolyominoes(G, untried, n, p, c):
