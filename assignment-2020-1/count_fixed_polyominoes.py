@@ -32,11 +32,6 @@ def create_graph(n):
             graph[(x, y)] = loc
     return graph
 
-def neighbors(G, p, v, u):
-    for j in p:
-        if j != u and v in G[j]:
-            return False
-    return True
 
 def CountFixedPolyominoes(G, untried, n, p, c):
     while not (len(untried) == 0):
@@ -46,8 +41,9 @@ def CountFixedPolyominoes(G, untried, n, p, c):
             c.counter = c.counter + 1
         else:
             new_neighbors = set()
+            ps_except_u_neighbors = [j for i in p if i != u for j in G[i]]
             for v in G[u]:
-                if (v not in untried) and (v not in p) and neighbors(G, p, v, u):
+                if (v not in untried) and (v not in p) and (v not in ps_except_u_neighbors):
                     new_neighbors.add(v)
             new_untried = untried.union(new_neighbors)
             CountFixedPolyominoes(G, new_untried, n, p, c)
