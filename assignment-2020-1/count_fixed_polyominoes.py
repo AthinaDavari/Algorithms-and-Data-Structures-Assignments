@@ -2,8 +2,8 @@ import pprint
 import argparse
 
 class Counter:
-  def __init__(self):
-    self.counter = 0
+    def __init__(self):
+        self.counter = 0
 
 def create_graph(n):
     graph = {}
