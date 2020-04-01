@@ -31,11 +31,8 @@ def degree_number_method(g, num_nodes):
 
 def ball(g, node, r):
     q = []
-    distance_from_node = []
-    inqueue = []
-    for i in range(0,len(g) + 1):
-        distance_from_node.append(-1)
-        inqueue.append(-1)
+    distance_from_node = [-1 for i in range(0,len(g) + 1)]
+    inqueue = [-1 for i in range(0,len(g) + 1)]
     q.append(node)
     inqueue[node] = 0
     while q:
@@ -52,20 +49,12 @@ def ball(g, node, r):
     return distance_from_node
 
 def th_ball(g, node, r):
-    blist = []
     inside_ball = ball(g, node, r)
-    for i in range(0,len(inside_ball)):
-        if inside_ball[i] == r:
-            blist.append(i)
-    return blist
+    return [i for i in range(0,len(inside_ball)) if inside_ball[i] == r]
 
 def ball_list(g, node, r):
-    blist = []
     inside_ball = ball(g, node, r)
-    for i in range(0,len(inside_ball)):
-        if inside_ball[i] >= 0:
-            blist.append(i)
-    return blist
+    return [i for i in range(0,len(inside_ball)) if inside_ball[i] >= 0]
 
 def influence_method(g, num_nodes, r):
     t_infl = {}
@@ -81,16 +70,16 @@ def influence_method(g, num_nodes, r):
            node_with_max_edges = i
     print (node_with_max_edges, max, sep=" ")
     for k in range(0, num_nodes-1):
-        a = ball_list(g, node_with_max_edges, r + 1)
+        ball = ball_list(g, node_with_max_edges, r + 1)
         for node in g[node_with_max_edges]:
             g[node].remove(node_with_max_edges)
         g[node_with_max_edges] = []
-        for i in a:
+        for i in ball:
             blist = th_ball(g, i, r)
-            b = 0
+            S = 0
             for j in blist:
-                b += len(g[j]) - 1
-            t_infl[i] = (len(g[i]) - 1) * b
+                S += len(g[j]) - 1
+            t_infl[i] = (len(g[i]) - 1) * S
         max = -1 
         for i in t_infl:
             if max < t_infl[i]:
