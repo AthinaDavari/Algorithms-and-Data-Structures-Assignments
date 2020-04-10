@@ -17,9 +17,10 @@ def read_file(file):
 
 def degree_number_method(g, num_nodes):
     max = -1 
+    node_with_max_edges = "a"
     for i in g:
         l = len(g[i])
-        if l > max:
+        if l > max or ( l == max and i < node_with_max_edges):
             max = l
             node_with_max_edges = i
     print(node_with_max_edges, max, sep=" ")
@@ -59,13 +60,14 @@ def ball_list(g, node, r):
 def influence_method(g, num_nodes, r):
     t_infl = {}
     max = -1
+    node_with_max_edges = "a"
     for i in g:
         blist = th_ball(g, i, r)
         b = 0
         for j in blist:
             b += len(g[j]) - 1
         t_infl[i] = (len(g[i]) - 1) * b
-        if max < t_infl[i]:
+        if max < t_infl[i] or ( t_infl[i] == max and i < node_with_max_edges):
            max = t_infl[i]
            node_with_max_edges = i
     print (node_with_max_edges, max, sep=" ")
@@ -80,9 +82,10 @@ def influence_method(g, num_nodes, r):
             for j in blist:
                 S += len(g[j]) - 1
             t_infl[i] = (len(g[i]) - 1) * S
+        node_with_max_edges = "a"
         max = -1 
         for i in t_infl:
-            if max < t_infl[i]:
+            if max < t_infl[i] or ( t_infl[i] == max and i < node_with_max_edges):
                 max = t_infl[i]
                 node_with_max_edges = i
         print (node_with_max_edges, max, sep=" ")
