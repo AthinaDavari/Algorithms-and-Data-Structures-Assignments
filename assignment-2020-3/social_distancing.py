@@ -101,56 +101,94 @@ def circle_tangert_front(l, dist_from_start, pr, n, c, r):
     cm = pr.value[0]
     rm = pr.value[1]
     for i in range(half_size):
-        pr = pr.prev
-        c1 = pr.value[0]
-        r1 = pr.value[1]
-        if are_tangent_circles(c1 , r1, c, r):
-            delete_front_nodes(l, dist_from_start, nn,  pr, "pr")
-            return True
+        ''' 
         n = n.next
         c1 = n.value[0]
         r1 = n.value[1]
         if are_tangent_circles(c1 , r1, c, r):
             #l.printLL()
             delete_front_nodes(l, dist_from_start, mm, n, "next")
-            return True
+            #print(n.value, mm.value)
+            return (mm, n)
+        '''
+        pr = pr.prev
+        c1 = pr.value[0]
+        r1 = pr.value[1]
+        if are_tangent_circles(c1 , r1, c, r):
+            #l.printLL()
+            delete_front_nodes(l, dist_from_start, nn,  pr, "pr")
+            return (pr, nn)
+        
+        n = n.next
+        c1 = n.value[0]
+        r1 = n.value[1]
+        if are_tangent_circles(c1 , r1, c, r):
+            #l.printLL()
+            delete_front_nodes(l, dist_from_start, mm, n, "next")
+            return (mm, n)
+        
     if half_size != (l.size/2):
+        '''
+        n = n.next
+        c1 = n.value[0]
+        r1 = n.value[1]
+        if are_tangent_circles(c1 , r1, c, r):
+            #l.printLL()
+            delete_front_nodes(l, dist_from_start, mm, n, "next")
+            return (mm, n)
+        '''
         pr = pr.prev
         c1 = pr.value[0]
         r1 = pr.value[1]
         if are_tangent_circles(c1 , r1, c, r):
             delete_front_nodes(dist_from_start, nn, pr, "pr")
-            return True
-    return False
+            return (nn, pr)
+        
+        #print(mm.value, nn.value)
+    return None
 
-r = 2
-start = (0, 0)
+r = 10
+start = (0.00, 0.00)
 dist_from_start = {}
 l = linkedlist.Linkedlist()
 c1 = start
-print(c1[0], c1[1], r, sep=" ")
+print("{:.2f}".format(c1[0]), "{:.2f}".format(c1[1]), r, sep=" ")
 sdist = round(distance_from_start(c1), 2)
 add_in_graph(dist_from_start, sdist, (c1, r))
 l.add_last((c1, r, sdist))
-c = (2*r, 0)
-print(c[0], c[1], r, sep=" ")
+c = (2*r, 0.00)
+print("{:.2f}".format(c[0]), "{:.2f}".format(c[1]), r, sep=" ")
 sdist = round(distance_from_start(c), 2)
 add_in_graph(dist_from_start, sdist, (c, r))
 l.add_last((c, r, sdist)) 
-for i in range(35):
+for i in range(998):
     flag = True
+    m = find_min_dist(dist_from_start)
+    prev = l.find_prev(m)
+    pr = prev.value
     while(flag):
+        '''
         m = find_min_dist(dist_from_start)
         prev = l.find_prev(m)
+        '''
         pr = prev.value
-        c = tangent_circle(m[0], 2, pr[0], 2, 2)
+        #print(m[0], pr[0])
+        c = tangent_circle(m[0], r, pr[0], r, r)
+        #print("miaw")
+        #print(c)
         #print("******************")
         #l.printLL()
         #print("******************")
-        flag = circle_tangert_front(l, dist_from_start, prev, prev.next, c, r)
+        ctf = circle_tangert_front(l, dist_from_start, prev, prev.next, c, r)
+        if ctf == None:
+            flag = False
+        else:
+            m = ctf[1].value
+            prev = ctf[0]
+            #print("bourrrrrrrrrr")
+            #print(m, prev.value)
         #print(flag, " flag")
-    print(c[0], c[1], r, sep=" ")
+    print("{:.2f}".format(c[0]), "{:.2f}".format(c[1]), r, sep=" ")
     sdist = round(distance_from_start(c), 2)
-    #print(sdist)
     add_in_graph(dist_from_start, sdist, (c, r))
     l.add(prev, (c ,r , sdist))
