@@ -135,13 +135,23 @@ def delete_front_nodes(listt, dist_from_start, node1, node2, type):
         middle = node1.prev
         while(flag):
             dist = middle.value[2]
-            l = dist_from_start[dist]
-            index = l.index((middle.value[0], middle.value[1]))
-            del l[index]
-            deleted_nodes.append((middle.value, index))
-            #l.remove((middle.value[0], middle.value[1]))
-            if not l:
-                del dist_from_start[dist]
+            l = dist_from_start.get(dist)
+            if l == None:
+                global cm_might_not_dead
+                cm_might_not_dead.append(middle.value)
+            else:    
+                elem = (middle.value[0], middle.value[1])
+                index = l.index(elem) if elem in l else -1
+                if index != -1:
+                    del l[index]
+                    deleted_nodes.append((middle.value, index))
+                    #l.remove((middle.value[0], middle.value[1]))
+                    if not l:
+                        del dist_from_start[dist]
+                    #listt.remove(middle.prev, middle.next)
+                else:
+                    #global cm_might_not_dead
+                    cm_might_not_dead.append(middle.value)
             listt.remove(middle.prev, middle.next)
             middle = middle.prev
             if middle == node2:
@@ -151,14 +161,25 @@ def delete_front_nodes(listt, dist_from_start, node1, node2, type):
     middle = node1.next
     while(flag):
         dist = middle.value[2]        
-        l = dist_from_start[dist]
-        index = l.index((middle.value[0], middle.value[1]))
-        del l[index]
-        deleted_nodes.append((middle.value, index))
-        #l.remove((middle.value[0], middle.value[1]))
-        if not l:
-            del dist_from_start[dist]
+        l = dist_from_start.get(dist)
+        if l == None:
+            cm_might_not_dead.append(middle.value)
+        else:
+            elem =(middle.value[0], middle.value[1])
+            index = l.index(elem) if elem in l else -1
+            if index != -1:
+                del l[index]
+                deleted_nodes.append((middle.value, index))
+                #l.remove((middle.value[0], middle.value[1]))
+                if not l:
+                    del dist_from_start[dist]
+                #listt.remove(middle.prev, middle.next)
+            else:
+                #global cm_might_not_dead
+                cm_might_not_dead.append(middle.value)
         listt.remove(middle.prev, middle.next)
+        #print("***************************")
+        #listt.printLL()
         middle = middle.next 
         if middle == node2:
             flag = False
@@ -236,18 +257,27 @@ l.add_last((c, r, sdist))
 for i in range(ITEMS - 2):     
     flag = True
     m = find_min_dist(dist_from_start)
+    #print(m)
+    #print(22222222222222222222222222222222222222222222222)
+    #l.printLL()
     prev = l.find_prev(m)
+    #print(i)
+    #print(prev)
     pr = prev.value
     if space_limit != None:
         deleted = []
         new_list = l.copy()
         cm = prev.next.value
+        cm_dead = []
+        cm_might_not_dead = []
     if SEED != None:
         r= random.randint(MIN_RADIOUS,MAX_RADIOUS)
     while(flag):
         pr = prev.value
         c = tangent_circle(m[0], m[1], pr[0], pr[1], r)
         ctf = circle_tangert_front(l, dist_from_start, prev, prev.next, c, r)
+        #print(22222222222222222222222222222222222222222222222)
+        #l.printLL()
         if ctf == None:
             flag = False
         else:
@@ -271,11 +301,14 @@ for i in range(ITEMS - 2):
                         spec_dist.insert(index, (circle[0], circle[1]))
                     else:
                         dist_from_start[dist] = [(circle[0], circle[1])]
+                        #######cm_might_not_dead.append((circle[0], circle[1])
                 prev_cm = l.find_prev(cm)
-                l.remove(prev_cm, prev_cm.next.next)
+                cm_might_not_dead.clear()
+                #l.remove(prev_cm, prev_cm.next.next)
                 dist = cm[2]
                 listt = dist_from_start[dist]
                 listt.remove((cm[0], cm[1]))
+                cm_dead.append((cm[0], cm[1], cm[2])) ######
                 if not listt:
                     del dist_from_start[dist]
                 m = find_min_dist(dist_from_start)
@@ -283,7 +316,22 @@ for i in range(ITEMS - 2):
                 pr = prev.value
                 cm = prev.next.value
                 deleted = []
-                new_list = l.copy()
+                #new_list = l.copy()
+            else:
+                ###############
+                for i in range(len(cm_dead)-1, -1, -1):
+                    if cm_dead[i] not in cm_might_not_dead:
+                        circle = cm_dead[i]
+                        #index = 0
+                        dist = circle[2]
+                        if dist in dist_from_start:
+                            spec_dist = dist_from_start[dist]
+                            spec_dist.insert(0, (circle[0], circle[1]))
+                        else:
+                            dist_from_start[dist] = [(circle[0], circle[1])]
+
+
+
     ouput_file.write("%.2f %.2f %i\n" % (c[0], c[1], r))
     #print("{:.2f}".format(c[0]), "{:.2f}".format(c[1]), r, sep=" ")
     sdist = round(distance_from_start(c), 2)
@@ -291,7 +339,7 @@ for i in range(ITEMS - 2):
     l.add(prev, (c ,r , sdist))
 if space_limit:
     for l in space_limit:
-        ouput_file.write("%.2f %.2f %.2f %.2f\n" % ((l[0])[0], (l[0])[1], (l[1])[0], (l[1])[1]))
+        ouput_file.write("%.1f %.1f %.1f %.1f\n" % ((l[0])[0], (l[0])[1], (l[1])[0], (l[1])[1]))
         #print("{:.2f}".format((l[0])[0]), "{:.2f}".format((l[0])[1]), "{:.2f}".format((l[1])[0]), "{:.2f}".format((l[1])[1]), sep=" ")
 ouput_file.close()
 '''
