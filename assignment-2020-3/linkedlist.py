@@ -29,9 +29,9 @@ class Linkedlist:
     def find_prev(self, value):
         for x in range(self.size):
             if x == 0:
-                node = self.last
+                node = self.first
             else:
-                node = node.prev
+                node = node.next
             if node.value == value:
                 return node.prev
         return None
@@ -41,8 +41,9 @@ class Linkedlist:
         node = Node(value, prev, next)
         prev.next = node
         next.prev = node
+        if prev == self.last:
+            self.last = node
         self.size += 1
-
 
     def remove_node(self, value):
         for x in range(self.size):
@@ -79,6 +80,21 @@ class Linkedlist:
                 node = node.next
                 print(node.value)
 
+    def copy(self):
+        if self.size == 0:
+            return Linkedlist()
+        node = self.first
+        new_list = Linkedlist(self.first.value)
+        if self.size == 1:
+            return new_list
+        while(True):
+            node = node.next
+            new_list.add_last(node.value)
+            if node == self.last:
+                break
+        return new_list
+
+
 class Node:
     def __init__(self, value, prev=None, next=None):
         self.prev = prev
@@ -86,16 +102,25 @@ class Node:
         self.next = next
 
 if __name__ == "__main__":
-    l = Linkedlist(3)
+    l = Linkedlist()
+    l.add_last(3)
     l.add_last(5)
     l.add_last(8)
     l.add_last(10)
-    v = l.find_prev(10)
+    new_list = l.copy()
+    v = l.find_prev(3)
     l.remove(v, v.next.next)
+    print("########")
     l.printLL()
+    print("########")
+    new_list.printLL()
+    print("########")
     l.add(v, 6)
     #l.remove_node(10)
     print(l.last.value)
     k =l.find_prev(5)
     print(k.value)
+    print("########")
     l.printLL()
+    print("########")
+    new_list.printLL()
