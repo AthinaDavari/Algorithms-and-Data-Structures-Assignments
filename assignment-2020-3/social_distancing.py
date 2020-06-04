@@ -156,7 +156,7 @@ parser.add_argument("-i", "--items", type=int, help="number of circles to add in
 parser.add_argument("-r", "--radious", type=int, help="radius of circles")
 parser.add_argument("--min_radious", type=int, help="minimum radius of circles")
 parser.add_argument("--max_radious", type=int, help="maximum radius of circles")
-parser.add_argument("-b", "--bountary_file", action='store', type=str, help="the file with the walls")
+parser.add_argument("-b", "--boundary_file", action='store', type=str, help="the file with the walls")
 parser.add_argument("-s", "--seed", type=int, default=None, help="seed for random function to create random circles")
 parser.add_argument("ouput_file", action='store', type=str, help="the file with the final circles")
 args = parser.parse_args()
@@ -171,8 +171,8 @@ else:
     ITEMS = args.items - 2
 space_limit = None
 ouput_file = open(args.ouput_file, "w")
-if args.bountary_file != None:
-    space_limit = read_file(args.bountary_file)
+if args.boundary_file != None:
+    space_limit = read_file(args.boundary_file)
 if SEED != None:
     random.seed(SEED)
     rstart= random.randint(MIN_RADIOUS,MAX_RADIOUS)
