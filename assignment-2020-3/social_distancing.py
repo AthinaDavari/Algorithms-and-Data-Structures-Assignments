@@ -192,7 +192,8 @@ ouput_file.write("%.2f %.2f %i\n" % (c[0], c[1], r))
 sdist = round(distance_from_start(c), 2)
 add_in_graph(dist_from_start, sdist, (c, r))
 l.add_last((c, r, sdist))
-for i in range(ITEMS):     
+items_in_file = 2
+for i in range(ITEMS):
     flag = True
     m = find_min_dist(dist_from_start)
     prev = l.find_prev(m)
@@ -257,14 +258,13 @@ for i in range(ITEMS):
                         else:
                             dist_from_start[dist] = [(circle[0], circle[1])]
     if not dist_from_start:
-        print(i+2)
         break
+    items_in_file += 1
     ouput_file.write("%.2f %.2f %i\n" % (c[0], c[1], r))
     sdist = round(distance_from_start(c), 2)
     add_in_graph(dist_from_start, sdist, (c, r))
     l.add(prev, (c ,r , sdist))
-if ITEMS != sys.maxsize:
-    print(ITEMS+2)
+print(items_in_file)
 if space_limit:
     for l in space_limit:
         ouput_file.write("%.1f %.1f %.1f %.1f\n" % ((l[0])[0], (l[0])[1], (l[1])[0], (l[1])[1]))
